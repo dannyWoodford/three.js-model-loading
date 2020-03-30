@@ -12,7 +12,7 @@ let flash
 
 let rain
 let rainGeo
-let rainCount = 100
+let rainCount = 3000
 
 // let rainDrop
 
@@ -32,10 +32,10 @@ function init(){
     
     //create camera
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
-    camera.position.set(0,3, 60)
+    camera.position.set(0,3, 57)
 
 
-    console.log(camera.rotation)
+    // console.log(camera.rotation)
     
 
     
@@ -60,17 +60,6 @@ function init(){
     //controls
     controls = new THREE.OrbitControls( camera, renderer.domElement );
     controls.enableKeys = false
-    // controls.enablePan = true
-    // controls.movementSpeed = 1000;
-    // controls.domElement = renderer.domElement;
-    // controls.rollSpeed = Math.PI / 24;
-    // controls.autoForward = true;
-    // controls.dragToLook = false;
-    // controls.movementSpeed = 1000;
-    // controls.autoForward = true;
-    // controls.dragToLook = true;
-
-
 
 
     container.appendChild(renderer.domElement)
@@ -80,16 +69,34 @@ function init(){
     loader.load('./3d/scene.gltf', function(gltf){
         plane = gltf.scene.children[0]
         plane.position.set(0, 0, 43)
-    //     plane.add( camera );
-    // camera.rotation.set(0.5, 0, 0)
-
 
         plane.rotation.x = 1.5707963267948963
         plane.rotation.y = -3.22
         // plane.position.set(0,0,0)
         
         scene.add(gltf.scene)
+
+        let listener = new THREE.AudioListener();
+        camera.add( listener );
+        
+        // create the PositionalAudio object (passing in the listener)
+        let sound = new THREE.PositionalAudio( listener );
+        
+        // load a sound and set it as the PositionalAudio object's buffer
+        let audioLoader = new THREE.AudioLoader();
+        audioLoader.load( 'canvas/jet-loop-01.ogg', function( buffer ) {
+            sound.setBuffer( buffer );
+            sound.setRefDistance( 20 );
+            sound.setLoop( true );
+            sound.setVolume( 0.7 );
+
+            sound.play();
+        });
+    
+        plane.add( sound );
     })
+
+
     
     // scene.fog = new THREE.FogExp2(0x1c1c2a, 0.00002)
     // renderer.setClearColor(scene.fog.color)
@@ -113,10 +120,13 @@ function animate(){
             300 + Math.random() *200,
             100
           );
-        flash.power = 50 + Math.random() * 500;
+        flash.power = 50 + Math.random() * 800;
     }
+    cloudParticle.forEach( p => {
+        p.rotation.z -= 0.008
+    })
+
     rainVariation()
-    // flashStrength()
     
     controls.update();
 
@@ -124,9 +134,6 @@ function animate(){
     renderer.render(scene, camera)
     movements(moveInt)
     
-    cloudParticle.forEach( p => {
-        p.rotation.z -= 0.008
-    })
 
 }
 
@@ -145,4 +152,4 @@ init()
 
 setTimeout(() => {
     animate()
-}, 600);
+}, 800);

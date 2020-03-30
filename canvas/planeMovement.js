@@ -3,7 +3,7 @@ let moveInt = 3
 
 
 
-var keyMap = [];
+let keyMap = [];
 document.addEventListener("keydown", onDocumentKeyDown, true); 
 document.addEventListener("keyup", onDocumentKeyUp, true);
 
@@ -17,8 +17,8 @@ function onDocumentKeyUp(event){
     var keyCode = event.keyCode;
     keyMap[keyCode] = false;
 
-    console.log(plane.rotation)
-    console.log(plane.position)
+    // console.log(plane.rotation)
+    // console.log(plane.position)
 
     if(keyCode == 37 ||keyCode == 39){
         const tl = new TimelineMax()

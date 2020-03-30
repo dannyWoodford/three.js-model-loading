@@ -1,5 +1,7 @@
 rainGeo = new THREE.Geometry()
 
+// var bufferGeometry = new THREE.BufferGeometry().fromGeometry( geometry );
+
 for (let i = 0; i < rainCount; i++) {
     rainDrop = new THREE.Vector3(
         Math.random() * 120 - 60,
@@ -11,15 +13,19 @@ for (let i = 0; i < rainCount; i++) {
         rainDrop.velocity = 0
     rainGeo.vertices.push(rainDrop)
 }
+// let sprite = new THREE.TextureLoader().load('images/snow_mask_2.png')
 
-rainMaterial = new THREE.PointsMaterial({
+let rainMaterial = new THREE.PointsMaterial({
     color: '#ffffff',
-    size: 4,
-    transparent: true
+    size: .3,
+    transparent: true,
+    map: THREE.ImageUtils.loadTexture(
+        'images/snow_mask_2.png'),
+    blending: THREE.AdditiveBlending,
 })
 
 rain = new THREE.Points(rainGeo, rainMaterial)
-rain.rotation.x = -1.5707963267948963
+rain.rotation.x = -1.57
 rain.rotation.y = -3.22
 scene.add(rain)
 
@@ -28,10 +34,13 @@ function rainVariation() {
         p.velocity -= 0.1 + Math.random() * 0.1;
         p.y += p.velocity;
         if (p.y < -60) {
-          p.y = 60;
-          p.velocity = 0;
+            p.y = 60;
+            p.velocity = 0;
         }
-      });
-      rainGeo.verticesNeedUpdate = true;
-      rain.rotation.y += 0.008
+    });
+
+        
+        rainGeo.verticesNeedUpdate = true;
+        rain.rotation.y += 0.01
+
 }
